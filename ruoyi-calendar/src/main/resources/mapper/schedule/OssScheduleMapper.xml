@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.calendar.mapper.OssScheduleMapper">
+    
+    <resultMap type="OssSchedule" id="OssScheduleResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="level"    column="level"    />
+        <result property="startTime"    column="startTime"    />
+        <result property="stopTime"    column="stopTime"    />
+        <result property="allday"    column="allday"    />
+        <result property="planner"    column="planner"    />
+        <result property="createBy"    column="createBy"    />
+        <result property="supporter"    column="supporter"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectOssScheduleVo">
+        select id, title, level, startTime, stopTime, allday, planner, createBy, supporter, remark from oss_schedule
+    </sql>
+
+    <select id="selectOssScheduleList" parameterType="OssSchedule" resultMap="OssScheduleResult">
+        <include refid="selectOssScheduleVo"/>
+        <where>
+            <if test="startTime != null "> and startTime = #{startTime}</if>
+            <if test="stopTime != null "> and stopTime = #{stopTime}</if>
+            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>
+        </where>
+    </select>
+    
+    <select id="selectOssScheduleById" parameterType="Integer" resultMap="OssScheduleResult">
+        <include refid="selectOssScheduleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOssSchedule" parameterType="OssSchedule" useGeneratedKeys="true" keyProperty="id">
+        insert into oss_schedule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="level != null">level,</if>
+            <if test="startTime != null">startTime,</if>
+            <if test="stopTime != null">stopTime,</if>
+            <if test="allday != null">allday,</if>
+            <if test="planner != null">planner,</if>
+            <if test="createBy != null">createBy,</if>
+            <if test="supporter != null">supporter,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="level != null">#{level},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="stopTime != null">#{stopTime},</if>
+            <if test="allday != null">#{allday},</if>
+            <if test="planner != null">#{planner},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="supporter != null">#{supporter},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOssSchedule" parameterType="OssSchedule">
+        update oss_schedule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="startTime != null">startTime = #{startTime},</if>
+            <if test="stopTime != null">stopTime = #{stopTime},</if>
+            <if test="allday != null">allday = #{allday},</if>
+            <if test="planner != null">planner = #{planner},</if>
+            <if test="createBy != null">createBy = #{createBy},</if>
+            <if test="supporter != null">supporter = #{supporter},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOssScheduleById" parameterType="Integer">
+        delete from oss_schedule where id = #{id}
+    </delete>
+
+    <delete id="deleteOssScheduleByIds" parameterType="String">
+        delete from oss_schedule where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

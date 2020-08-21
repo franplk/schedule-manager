@@ -1,0 +1,8 @@
+export { default as ApplyBtn } from "./ApplyBtn/index.vue"
+export { default as SubmitBtn } from "./SubmitBtn/index.vue"
+export { default as AllotBtn } from "./AllotBtn/index.vue"
+export { default as AuditBtn } from "./AuditBtn/index.vue"
+export { default as FinishBtn } from "./FinishBtn/index.vue"
+export { default as FlowBtn } from "./FlowBtn/index.vue"
+export { default as WordBtn } from "./WordBtn/index.vue"
+export { default as ExcelBtn } from "./ExcelBtn/index.vue"

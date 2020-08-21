@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.budget.mapper.OssStandardMapper">
+    
+    <resultMap type="OssStandard" id="OssStandardResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="category"    column="category"    />
+        <result property="criterion"    column="criterion"    />
+        <result property="benchmark"    column="benchmark"    />
+        <result property="reference"    column="reference"    />
+        <result property="tpmtype"    column="tpmType"    />
+    </resultMap>
+
+    <sql id="selectOssStandardVo">
+        select id, name, category, criterion, benchmark, reference, tpmType from oss_standard
+    </sql>
+
+    <select id="selectOssStandardList" parameterType="OssStandard" resultMap="OssStandardResult">
+        <include refid="selectOssStandardVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectOssStandardById" parameterType="Integer" resultMap="OssStandardResult">
+        <include refid="selectOssStandardVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOssStandard" parameterType="OssStandard">
+        insert into oss_standard
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="category != null">category,</if>
+            <if test="criterion != null">criterion,</if>
+            <if test="benchmark != null">benchmark,</if>
+            <if test="reference != null">reference,</if>
+            <if test="tpmtype != null">tpmType,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="category != null">#{category},</if>
+            <if test="criterion != null">#{criterion},</if>
+            <if test="benchmark != null">#{benchmark},</if>
+            <if test="reference != null">#{reference},</if>
+            <if test="tpmtype != null">#{tpmtype},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOssStandard" parameterType="OssStandard">
+        update oss_standard
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="criterion != null">criterion = #{criterion},</if>
+            <if test="benchmark != null">benchmark = #{benchmark},</if>
+            <if test="reference != null">reference = #{reference},</if>
+            <if test="tpmtype != null">tpmType = #{tpmtype},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOssStandardById" parameterType="Integer">
+        delete from oss_standard where id = #{id}
+    </delete>
+
+    <delete id="deleteOssStandardByIds" parameterType="String">
+        delete from oss_standard where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

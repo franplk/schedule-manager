@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.budget.mapper.OssTemplateMapper">
+    
+    <resultMap type="OssTemplate" id="OssTemplateResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="pid"    column="pid"    />
+        <result property="tpmType"    column="tpm_type"    />
+    </resultMap>
+
+    <sql id="selectOssTemplateVo">
+        select id, name, pid, tpm_type from oss_template
+    </sql>
+
+    <select id="selectOssTemplateList" parameterType="OssTemplate" resultMap="OssTemplateResult">
+        <include refid="selectOssTemplateVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="tpmType != null "> and tpm_type = #{tpmType}</if>
+        </where>
+    </select>
+    
+    <select id="selectOssTemplateById" parameterType="Integer" resultMap="OssTemplateResult">
+        <include refid="selectOssTemplateVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOssTemplate" parameterType="OssTemplate">
+        insert into oss_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="pid != null">pid,</if>
+            <if test="tpmType != null">tpm_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="pid != null">#{pid},</if>
+            <if test="tpmType != null">#{tpmType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOssTemplate" parameterType="OssTemplate">
+        update oss_template
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="pid != null">pid = #{pid},</if>
+            <if test="tpmType != null">tpm_type = #{tpmType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOssTemplateById" parameterType="Integer">
+        delete from oss_template where id = #{id}
+    </delete>
+
+    <delete id="deleteOssTemplateByIds" parameterType="String">
+        delete from oss_template where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

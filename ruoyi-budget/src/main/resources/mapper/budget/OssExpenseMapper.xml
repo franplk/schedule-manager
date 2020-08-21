@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.budget.mapper.OssExpenseMapper">
+    
+    <resultMap id="OssExpenseVoResult" type="com.ruoyi.budget.domain.vo.OssExpenseVO">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="status"    column="status"    />
+        <result property="applySum"    column="applySum"    />
+        <result property="auditSum"    column="auditSum"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <select id="selectExpenseList" parameterType="Integer" resultMap="OssExpenseVoResult">
+        select p.id, p.code, p.name, p.status, p.remark,
+          sum(b.applySum) as applySum,
+          sum(b.auditSum) as auditSum
+        from oss_project p
+        left join oss_expense b on p.id = b.projectId
+        <where>
+            <if test="name != null and name != ''"> and p.name like concat('%', #{name}, '%')</if>
+            <if test="status != null "> and p.status = #{status}</if>
+        </where>
+        group by p.id
+    </select>
+
+    <resultMap type="OssExpense" id="OssExpenseResult">
+        <result property="id"    column="id"    />
+        <result property="projectId"    column="projectId"    />
+        <result property="tpmId"    column="tpmId"    />
+        <result property="tpmPid"    column="tpmPid"    />
+        <result property="itemName"    column="itemName"    />
+        <result property="applysum"    column="applySum"    />
+        <result property="applyNum"    column="applyNum"    />
+        <result property="applyPrice"    column="applyPrice"    />
+        <result property="applyFactor"    column="applyFactor"    />
+        <result property="auditSum"    column="auditSum"    />
+        <result property="auditNum"    column="auditNum"    />
+        <result property="auditPrice"    column="auditPrice"    />
+        <result property="auditFactor"    column="auditFactor"    />
+        <result property="memo"    column="memo"    />
+    </resultMap>
+
+    <sql id="selectOssExpenseVo">
+        select id, projectId, tpmId, tpmPid, itemName, applySum, applyNum, applyPrice, applyFactor, auditSum, auditNum, auditPrice, auditFactor, memo from oss_expense
+    </sql>
+
+    <select id="selectExpenseDetail" parameterType="Integer" resultMap="OssExpenseResult">
+        <include refid="selectOssExpenseVo"/>
+        where projectId = #{projectId}
+    </select>
+
+    <insert id="insertOssExpense" parameterType="OssExpense" useGeneratedKeys="true" keyProperty="id">
+        insert into oss_expense
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">projectId,</if>
+            <if test="tpmId != null">tpmId,</if>
+            <if test="tpmPid != null">tpmPid,</if>
+            <if test="itemName != null">itemName,</if>
+            <if test="applysum != null">applySum,</if>
+            <if test="applyNum != null">applyNum,</if>
+            <if test="applyPrice != null">applyPrice,</if>
+            <if test="applyFactor != null">applyFactor,</if>
+            <if test="auditSum != null">auditSum,</if>
+            <if test="auditNum != null">auditNum,</if>
+            <if test="auditPrice != null">auditPrice,</if>
+            <if test="auditFactor != null">auditFactor,</if>
+            <if test="memo != null">memo,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">#{projectId},</if>
+            <if test="tpmId != null">#{tpmId},</if>
+            <if test="tpmPid != null">#{tpmPid},</if>
+            <if test="itemName != null">#{itemName},</if>
+            <if test="applysum != null">#{applysum},</if>
+            <if test="applyNum != null">#{applyNum},</if>
+            <if test="applyPrice != null">#{applyPrice},</if>
+            <if test="applyFactor != null">#{applyFactor},</if>
+            <if test="auditSum != null">#{auditSum},</if>
+            <if test="auditNum != null">#{auditNum},</if>
+            <if test="auditPrice != null">#{auditPrice},</if>
+            <if test="auditFactor != null">#{auditFactor},</if>
+            <if test="memo != null">#{memo},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOssExpense" parameterType="OssExpense">
+        update oss_expense
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null">projectId = #{projectId},</if>
+            <if test="tpmId != null">tpmId = #{tpmId},</if>
+            <if test="tpmPid != null">tpmPid = #{tpmPid},</if>
+            <if test="itemName != null">itemName = #{itemName},</if>
+            <if test="applysum != null">applySum = #{applysum},</if>
+            <if test="applyNum != null">applyNum = #{applyNum},</if>
+            <if test="applyPrice != null">applyPrice = #{applyPrice},</if>
+            <if test="applyFactor != null">applyFactor = #{applyFactor},</if>
+            <if test="auditSum != null">auditSum = #{auditSum},</if>
+            <if test="auditNum != null">auditNum = #{auditNum},</if>
+            <if test="auditPrice != null">auditPrice = #{auditPrice},</if>
+            <if test="auditFactor != null">auditFactor = #{auditFactor},</if>
+            <if test="memo != null">memo = #{memo},</if>
+        </trim>
+        where id = #{id}
+    </update>
+</mapper>
